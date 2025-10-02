@@ -1,4 +1,4 @@
-Flask==2.3.4
+Flask==2.2.5
 selenium==4.35.0
 webdriver-manager==4.0.2
 gspread==6.2.1
