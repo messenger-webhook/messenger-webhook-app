@@ -1,27 +1,31 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
-# ⚡️ Remplace ce token par le token que tu as défini dans Facebook
+# Ton token de vérification que tu as mis sur Messenger
 VERIFY_TOKEN = "b370b63a6cafa7a144131c8c079aca96"
 
-@app.route("/webhook", methods=["GET", "POST"])
-def webhook():
-    if request.method == "GET":
-        # Vérification du token pour Facebook
-        token_sent = request.args.get("hub.verify_token")
-        challenge = request.args.get("hub.challenge")
-        if token_sent == VERIFY_TOKEN:
-            return challenge  # Renvoie le challenge en texte brut
-        return "Token invalide", 403
+# Route pour la validation du webhook
+@app.route('/webhook', methods=['GET'])
+def verify_webhook():
+    # Récupère les paramètres envoyés par Messenger
+    token_sent = request.args.get("hub.verify_token")
+    challenge = request.args.get("hub.challenge")
+    mode = request.args.get("hub.mode")
 
-    elif request.method == "POST":
-        # Quand Facebook envoie un message ou événement
-        data = request.get_json()
-        print("Nouvel événement Messenger reçu :", data)
-        # Ici tu peux traiter les messages ou les statuts
-        return "OK", 200
+    if mode == "subscribe" and token_sent == VERIFY_TOKEN:
+        return challenge, 200  # Renvoie le challenge si le token est correct
+    return "Invalid verification token", 403
+
+# Route pour recevoir les messages
+@app.route('/webhook', methods=['POST'])
+def receive_message():
+    data = request.get_json()
+    print("Message reçu:", data)  # Affiche dans les logs Render
+    return jsonify(status="ok"), 200
 
 if __name__ == "__main__":
-    # Render utilisera son propre port, on met host 0.0.0.0 pour rendre accessible
-    app.run(host="0.0.0.0", port=10000)
+    # Render définit automatiquement le port via la variable d'environnement PORT
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
