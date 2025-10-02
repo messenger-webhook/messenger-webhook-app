@@ -1,7 +1,10 @@
-selenium==4.35.0
-webdriver-manager==4.0.2
-gspread==6.2.1
-oauth2client==4.1.3
-python-dotenv==1.1.1
-pytelegrambotapi==4.29.1
-cryptography==41.0.0
+echo selenium==4.35.0>requirements.txt
+echo webdriver-manager==4.0.2>>requirements.txt
+echo gspread==6.2.1>>requirements.txt
+echo oauth2client==4.1.3>>requirements.txt
+echo python-dotenv==1.1.1>>requirements.txt
+echo pytelegrambotapi==4.29.1>>requirements.txt
+echo cryptography==41.0.0>>requirements.txt
+echo flask>>requirements.txt
+echo requests>>requirements.txt
+echo gunicorn>>requirements.txt
